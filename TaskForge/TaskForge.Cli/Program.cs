@@ -10,4 +10,4 @@ if (string.IsNullOrWhiteSpace(name))
     return;
 }
 
-Console.WriteLine($"Welcome, {name}. Today we ship.");
+Console.WriteLine($"Welcome, {name}. Today we ship v0.1.");
