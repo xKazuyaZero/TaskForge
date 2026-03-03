@@ -27,15 +27,41 @@ while (true)
             break;
 
         case "add":
-            // TODO: call service.Add(arg) and print confirmation
+            try
+            {
+                var created = service.Add(arg);
+                Console.WriteLine($"Added: [ ] {created.Id}: {created.Title}");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             break;
 
         case "list":
-            // TODO: print tasks with [ ] or [x]
+            var tasks = service.GetAll();
+            if (tasks.Count == 0)
+            {
+                Console.WriteLine("No tasks yet.");
+                break;
+            }
+
+            foreach (var t in tasks)
+            {
+                var mark = t.IsDone ? "x" : " ";
+                Console.WriteLine($"[{mark}] {t.Id}: {t.Title}");
+            }
             break;
 
         case "done":
-            // TODO: parse id, call service.MarkDone(id)
+            if (!int.TryParse(arg, out var id))
+            {
+                Console.WriteLine("Invalid id. Example: done 1");
+                break;
+            }
+
+            var ok = service.MarkDone(id);
+            Console.WriteLine(ok ? $"Marked done: {id}" : $"Task not found: {id}");
             break;
 
         case "exit":

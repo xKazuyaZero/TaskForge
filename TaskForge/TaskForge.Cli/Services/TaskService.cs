@@ -9,11 +9,13 @@ public class TaskService
 
     public TaskItem Add(string title)
     {
-        // TODO: validate title (no null/whitespace)
-        // TODO: create TaskItem with next id
-        // TODO: add to list
-        // TODO: return created item
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(title))
+            throw new ArgumentException("<title> cannot be empty.", nameof(title));
+
+        var cleaned = title.Trim();
+        var item = new TaskItem(_nextId++, cleaned);
+        _tasks.Add(item);
+        return item;
     }
 
     public IReadOnlyList<TaskItem> GetAll()
@@ -23,9 +25,11 @@ public class TaskService
 
     public bool MarkDone(int id)
     {
-        // TODO: find task by id
-        // TODO: if not found return false
-        // TODO: mark done and return true
-        throw new NotImplementedException();
+        var item = _tasks.FirstOrDefault(t => t.Id == id);
+        if (item is null)
+            return false;
+
+        item.MarkDone();
+        return true;
     }
 }
