@@ -40,6 +40,7 @@ while (true)
 
         case "list":
             var tasks = service.GetAll();
+
             if (tasks.Count == 0)
             {
                 Console.WriteLine("No tasks yet.");

@@ -20,14 +20,14 @@ public class TaskService
 
     public IReadOnlyList<TaskItem> GetAll()
     {
-        return _tasks;
+        return _tasks.AsReadOnly();
     }
 
     public bool MarkDone(int id)
     {
         var item = _tasks.FirstOrDefault(t => t.Id == id);
         if (item is null)
-            return false;
+            return false; 
 
         item.MarkDone();
         return true;
