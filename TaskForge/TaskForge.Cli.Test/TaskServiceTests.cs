@@ -1,6 +1,6 @@
-﻿using TaskForge.Cli.Services;
+﻿using TaskForge.Core.Services;
 
-namespace TaskForge.Cli.Test;
+namespace TaskForge.Core.Test;
 
 public class TaskServiceTest
 {
@@ -8,7 +8,7 @@ public class TaskServiceTest
     public void Add_FirstTask_GetsIdOne()
     {
         // Arrange
-        var service = new TaskService(new List<TaskForge.Cli.Models.TaskItem>());
+        var service = new TaskService(new List<TaskForge.Core.Models.TaskItem>());
 
         // Act
         var task = service.Add("Buy Milk");
@@ -21,7 +21,7 @@ public class TaskServiceTest
     public void Add_TitleIsTrimmed()
     {
         // Arrange
-        var service = new TaskService(new List<TaskForge.Cli.Models.TaskItem>());
+        var service = new TaskService(new List<TaskForge.Core.Models.TaskItem>());
 
         // Act
         var task = service.Add("      Buy milk       ");
@@ -34,7 +34,7 @@ public class TaskServiceTest
     public void Add_WhitespaceTitle_Throws()
     {
         // Arrange
-        var service = new TaskService(new List<TaskForge.Cli.Models.TaskItem>());
+        var service = new TaskService(new List<TaskForge.Core.Models.TaskItem>());
 
         // Act + Assert
         Assert.Throws<ArgumentException>(() => service.Add("   "));
@@ -44,7 +44,7 @@ public class TaskServiceTest
     public void MarkDone_TaskReturnsTrue()
     {
         // Arrange
-        var service = new TaskService(new List<TaskForge.Cli.Models.TaskItem>());
+        var service = new TaskService(new List<TaskForge.Core.Models.TaskItem>());
         var task = service.Add("Buy milk");
 
         // Act
@@ -58,7 +58,7 @@ public class TaskServiceTest
     public void MarkDone_TaskBecomesDone()
     {
         // Arrange
-        var service = new TaskService(new List<TaskForge.Cli.Models.TaskItem>());
+        var service = new TaskService(new List<TaskForge.Core.Models.TaskItem>());
         var task = service.Add("Buy milk");
 
         // Act
@@ -72,7 +72,7 @@ public class TaskServiceTest
     public void MarkDone_MissingTaskReturnsFalse()
     {
         // Arrange
-        var service = new TaskService(new List<TaskForge.Cli.Models.TaskItem>());
+        var service = new TaskService(new List<TaskForge.Core.Models.TaskItem>());
 
         // Act
         var result = service.MarkDone(999);
@@ -85,11 +85,11 @@ public class TaskServiceTest
     public void Add_PreloadedTasksUsesMaxIdPlusOne()
     {
         // Arrange
-        var loadedTasks = new List<TaskForge.Cli.Models.TaskItem>
+        var loadedTasks = new List<TaskForge.Core.Models.TaskItem>
         {
-            new TaskForge.Cli.Models.TaskItem(1, "Task 1"),
-            new TaskForge.Cli.Models.TaskItem(2, "Task 2"),
-            new TaskForge.Cli.Models.TaskItem(5, "Task 3")
+            new TaskForge.Core.Models.TaskItem(1, "Task 1"),
+            new TaskForge.Core.Models.TaskItem(2, "Task 2"),
+            new TaskForge.Core.Models.TaskItem(5, "Task 3")
         };
 
         var service = new TaskService(loadedTasks);
