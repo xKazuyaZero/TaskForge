@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace TaskForge.Cli.Models;
+namespace TaskForge.Core.Models;
 
 public class TaskItem
 {

@@ -1,6 +1,6 @@
-using TaskForge.Cli.Models;
+using TaskForge.Core.Models;
 
-namespace TaskForge.Cli.Services;
+namespace TaskForge.Core.Services;
 
 public class TaskService
 {

@@ -1,5 +1,5 @@
-﻿using TaskForge.Cli.Services;
-using TaskForge.Cli.Storage;
+﻿using TaskForge.Core.Services;
+using TaskForge.Core.Storage;
 
 namespace TaskForge.Cli;
 
