@@ -1,6 +1,11 @@
 ﻿using TaskForge.Cli.Services;
+using TaskForge.Cli.Storage;
 
-var service = new TaskService();
+var tasksFilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "tasks.json"));
+
+var storage = new TaskStorage(tasksFilePath);
+var loadedTasks = storage.LoadTasks();
+var service = new TaskService(loadedTasks);
 
 Console.WriteLine("TaskForge v0.1");
 Console.WriteLine("Type 'help' for commands.");
@@ -30,6 +35,7 @@ while (true)
             try
             {
                 var created = service.Add(arg);
+                storage.SaveTasks(service.GetAll());
                 Console.WriteLine($"Added: [ ] {created.Id}: {created.Title}");
             }
             catch (ArgumentException ex)
@@ -62,7 +68,16 @@ while (true)
             }
 
             var ok = service.MarkDone(id);
-            Console.WriteLine(ok ? $"Marked done: {id}" : $"Task not found: {id}");
+
+            if (ok)
+            {
+                storage.SaveTasks(service.GetAll());
+                Console.WriteLine($"Marked done: {id}");
+            }
+            else
+            {
+                Console.WriteLine($"Task not found: {id}");
+            }
             break;
 
         case "exit":

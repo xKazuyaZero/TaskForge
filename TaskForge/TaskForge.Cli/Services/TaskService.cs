@@ -7,6 +7,12 @@ public class TaskService
     private readonly List<TaskItem> _tasks = new();
     private int _nextId = 1;
 
+    public TaskService(List<TaskItem> loadedTasks)
+    {
+        _tasks = loadedTasks ?? new List<TaskItem>();
+        _nextId = _tasks.Count > 0 ? _tasks.Max(t => t.Id) + 1 : 1;
+    }
+
     public TaskItem Add(string title)
     {
         if (string.IsNullOrWhiteSpace(title))
