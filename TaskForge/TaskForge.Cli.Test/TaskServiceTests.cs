@@ -80,4 +80,24 @@ public class TaskServiceTest
         // Assert
         Assert.False(result);
     }
+
+    [Fact]
+    public void Add_PreloadedTasksUsesMaxIdPlusOne()
+    {
+        // Arrange
+        var loadedTasks = new List<TaskForge.Cli.Models.TaskItem>
+        {
+            new TaskForge.Cli.Models.TaskItem(1, "Task 1"),
+            new TaskForge.Cli.Models.TaskItem(2, "Task 2"),
+            new TaskForge.Cli.Models.TaskItem(5, "Task 3")
+        };
+
+        var service = new TaskService(loadedTasks);
+
+        // Act
+        var newTask = service.Add("New Task");
+
+        // Assert
+        Assert.Equal(6, newTask.Id);
+    }
 }
