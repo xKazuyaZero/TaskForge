@@ -57,7 +57,7 @@ public class CommandHandler
         Console.WriteLine(" add <title>     Adds a task");
         Console.WriteLine(" list            Lists tasks");
         Console.WriteLine(" done <id>       Marks task done");
-        Console.WriteLine(" delete <id>     Delets a task");
+        Console.WriteLine(" delete <id>     Deletes a task");
         Console.WriteLine(" exit            Quits");
     }
 
@@ -132,14 +132,10 @@ public class CommandHandler
             return;
         }
 
-        var saveSucceded = _storage.TrySaveTasks(_service.GetAll(), out var saveError);
-
-        Console.WriteLine($"Deleted task: {id}");
-
-        if (!saveSucceded)
-        {
-            Console.WriteLine($"{saveError} Changes are only in memory and may be lost when the app exits.");
-        }
+        PrintSaveResult(
+            _storage.TrySaveTasks(_service.GetAll(), out var saveError),
+            saveError,
+            $"Deleted task: {id}");
     }
 
     private void PrintSaveResult(bool saveSucceeded, string saveError, string successMessage)
