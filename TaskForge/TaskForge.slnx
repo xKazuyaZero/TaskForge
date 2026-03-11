@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="TaskForge.Cli.Test/TaskForge.Cli.Test.csproj" Id="6790a26b-1693-4add-bb6a-8b19ea7b0153" />
+  <Project Path="TaskForge.Cli.Test/TaskForge.Core.Test.csproj" Id="6790a26b-1693-4add-bb6a-8b19ea7b0153" />
   <Project Path="TaskForge.Cli/TaskForge.Cli.csproj" />
   <Project Path="TaskForge.Core/TaskForge.Core.csproj" Id="bfe47380-fb5b-4e92-8a9e-7d908a094b54" />
 </Solution>

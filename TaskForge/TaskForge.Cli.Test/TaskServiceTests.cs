@@ -100,4 +100,63 @@ public class TaskServiceTest
         // Assert
         Assert.Equal(6, newTask.Id);
     }
+
+    [Fact]
+    public void Delete_ExistingTaskReturnsTrue()
+    {
+        // Arrange
+        var service = new TaskService(new List<TaskForge.Core.Models.TaskItem>());
+        var task = service.Add("Buy milk");
+
+        // Act 
+        var result = service.Delete(task.Id);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void Delete_ExistingTaskRemovesItFromList()
+    {
+        // Arrange
+        var service = new TaskService(new List<TaskForge.Core.Models.TaskItem>());
+        var task = service.Add("Buy milk");
+
+        // Act
+        service.Delete(task.Id);
+
+        // Assert
+        Assert.Empty(service.GetAll());
+    }
+
+    [Fact]
+    public void Delete_MissingTaskReturnsFalse()
+    {
+        // Arrange
+        var service = new TaskService(new List<TaskForge.Core.Models.TaskItem>());
+
+        // Act
+        var result = service.Delete(999);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void Delete_OneTaskDoesNotAffectOthers()
+    {
+        // Arrange
+        var service = new TaskService(new List<TaskForge.Core.Models.TaskItem>());
+        var first = service.Add("Buy milk");
+        var second = service.Add("Walk dog");
+
+        // Act
+        service.Delete(first.Id);
+
+        // Assert
+        var tasks = service.GetAll();
+        Assert.Single(tasks);
+        Assert.Equal(second.Id, tasks[0].Id);
+        Assert.Equal("Walk dog", tasks[0].Title);
+    }
 }

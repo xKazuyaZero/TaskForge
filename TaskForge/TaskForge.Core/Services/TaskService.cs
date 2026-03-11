@@ -38,4 +38,15 @@ public class TaskService
         item.MarkDone();
         return true;
     }
+
+    public bool Delete(int id)
+    {
+        var item = _tasks.FirstOrDefault(t => t.Id == id);
+
+        if (item is null)
+            return false;
+        
+        _tasks.Remove(item);
+        return true;
+    }
 }
