@@ -35,8 +35,16 @@ while (true)
             try
             {
                 var created = service.Add(arg);
-                storage.SaveTasks(service.GetAll());
-                Console.WriteLine($"Added: [ ] {created.Id}: {created.Title}");
+
+                if (storage.TrySaveTasks(service.GetAll(), out var saveError))
+                {
+                    Console.WriteLine($"Added: [ ] {created.Id}: {created.Title}");
+                }
+                else
+                {
+                    Console.WriteLine($"Added: [ ] {created.Id}: {created.Title}");
+                    Console.WriteLine($"{saveError} Changes are only in memory and may be lost when the app exits.");
+                }
             }
             catch (ArgumentException ex)
             {
@@ -71,8 +79,16 @@ while (true)
 
             if (ok)
             {
-                storage.SaveTasks(service.GetAll());
-                Console.WriteLine($"Marked done: {id}");
+                if (storage.TrySaveTasks(service.GetAll(), out var saveError))
+                {
+                    Console.WriteLine($"Marked done: {id}");
+                }
+                else
+                {
+                    Console.WriteLine($"Marked done: {id}");
+                    Console.WriteLine($"{saveError} Changes are only in memory and may be lost when the app exits.");
+                }
+                
             }
             else
             {

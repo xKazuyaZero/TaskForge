@@ -38,9 +38,24 @@ public class TaskStorage
         }
     }
 
-    public void SaveTasks(IReadOnlyList<TaskItem> tasks)
+    public bool TrySaveTasks(IReadOnlyList<TaskItem> tasks, out string errorMessage)
     {
-        string json = JsonSerializer.Serialize(tasks, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(_filePath, json);
+        try
+        {
+            string json = JsonSerializer.Serialize(tasks, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(_filePath, json);
+            errorMessage = string.Empty;
+            return true;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            errorMessage = "Could not save tasks: access denied.";
+            return false;
+        }
+        catch (IOException)
+        {
+            errorMessage = "Could not save tasks: file write failed.";
+            return false;
+        }
     }
 }
