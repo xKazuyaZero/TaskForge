@@ -1,5 +1,5 @@
-﻿using TaskForge.Cli.Services;
-using TaskForge.Cli.Storage;
+﻿using TaskForge.Core.Services;
+using TaskForge.Core.Storage;
 
 namespace TaskForge.Cli;
 
@@ -38,6 +38,10 @@ public class CommandHandler
                 HandleDone(arg);
                 return true;
 
+            case "delete":
+                HandleDelete(arg);
+                return true;
+
             case "exit":
                 return false;
 
@@ -53,6 +57,7 @@ public class CommandHandler
         Console.WriteLine(" add <title>     Adds a task");
         Console.WriteLine(" list            Lists tasks");
         Console.WriteLine(" done <id>       Marks task done");
+        Console.WriteLine(" delete <id>     Deletes a task");
         Console.WriteLine(" exit            Quits");
     }
 
@@ -109,6 +114,28 @@ public class CommandHandler
             _storage.TrySaveTasks(_service.GetAll(), out var saveError),
             saveError,
             $"Marked done: {id}");
+    }
+
+    private void HandleDelete(string arg)
+    {
+        if (!int.TryParse(arg, out var id))
+        {
+            Console.WriteLine("Invalid id. Example: delete 1");
+            return;
+        }
+
+        var ok = _service.Delete(id);
+
+        if (!ok)
+        {
+            Console.WriteLine($"Task not found: {id}");
+            return;
+        }
+
+        PrintSaveResult(
+            _storage.TrySaveTasks(_service.GetAll(), out var saveError),
+            saveError,
+            $"Deleted task: {id}");
     }
 
     private void PrintSaveResult(bool saveSucceeded, string saveError, string successMessage)

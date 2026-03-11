@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TaskForge.Cli\TaskForge.Cli.csproj" />
+    <ProjectReference Include="..\TaskForge.Core\TaskForge.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

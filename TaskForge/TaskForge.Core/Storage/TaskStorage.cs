@@ -1,7 +1,7 @@
 using System.Text.Json;
-using TaskForge.Cli.Models;
+using TaskForge.Core.Models;
 
-namespace TaskForge.Cli.Storage;
+namespace TaskForge.Core.Storage;
 
 public class TaskStorage
 {
@@ -33,7 +33,7 @@ public class TaskStorage
         }
         catch (IOException)
         {
-            Console.WriteLine("Warning: tasks.json could not be read. Starting with an empty tasks list.");
+            Console.WriteLine("Warning: tasks.json could not be read. Starting with an empty task list.");
             return new List<TaskItem>();
         }
     }

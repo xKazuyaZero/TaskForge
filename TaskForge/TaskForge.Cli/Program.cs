@@ -1,6 +1,6 @@
 ﻿using TaskForge.Cli;
-using TaskForge.Cli.Services;
-using TaskForge.Cli.Storage;
+using TaskForge.Core.Services;
+using TaskForge.Core.Storage;
 
 var tasksFilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "tasks.json"));
 
