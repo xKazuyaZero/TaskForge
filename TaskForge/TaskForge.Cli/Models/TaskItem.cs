@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace TaskForge.Cli.Models;
 
 public class TaskItem
@@ -6,10 +8,12 @@ public class TaskItem
     public string Title { get; }
     public bool IsDone { get; private set; }
 
-    public TaskItem(int id, string title)
+    [JsonConstructor]
+    public TaskItem(int id, string title, bool isDone = false)
     {
         Id = id;
         Title = title;
+        IsDone = isDone;
     }
 
     public void MarkDone()

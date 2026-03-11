@@ -1,6 +1,11 @@
 ﻿using TaskForge.Cli.Services;
+using TaskForge.Cli.Storage;
 
-var service = new TaskService();
+var tasksFilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "tasks.json"));
+
+var storage = new TaskStorage(tasksFilePath);
+var loadedTasks = storage.LoadTasks();
+var service = new TaskService(loadedTasks);
 
 Console.WriteLine("TaskForge v0.1");
 Console.WriteLine("Type 'help' for commands.");
@@ -30,7 +35,16 @@ while (true)
             try
             {
                 var created = service.Add(arg);
-                Console.WriteLine($"Added: [ ] {created.Id}: {created.Title}");
+
+                if (storage.TrySaveTasks(service.GetAll(), out var saveError))
+                {
+                    Console.WriteLine($"Added: [ ] {created.Id}: {created.Title}");
+                }
+                else
+                {
+                    Console.WriteLine($"Added: [ ] {created.Id}: {created.Title}");
+                    Console.WriteLine($"{saveError} Changes are only in memory and may be lost when the app exits.");
+                }
             }
             catch (ArgumentException ex)
             {
@@ -62,7 +76,24 @@ while (true)
             }
 
             var ok = service.MarkDone(id);
-            Console.WriteLine(ok ? $"Marked done: {id}" : $"Task not found: {id}");
+
+            if (ok)
+            {
+                if (storage.TrySaveTasks(service.GetAll(), out var saveError))
+                {
+                    Console.WriteLine($"Marked done: {id}");
+                }
+                else
+                {
+                    Console.WriteLine($"Marked done: {id}");
+                    Console.WriteLine($"{saveError} Changes are only in memory and may be lost when the app exits.");
+                }
+                
+            }
+            else
+            {
+                Console.WriteLine($"Task not found: {id}");
+            }
             break;
 
         case "exit":
