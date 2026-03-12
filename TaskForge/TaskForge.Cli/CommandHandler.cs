@@ -6,9 +6,9 @@ namespace TaskForge.Cli;
 public class CommandHandler
 {
     private readonly TaskService _service;
-    private readonly TaskStorage _storage;
+    private readonly ITaskStorage _storage;
 
-    public CommandHandler(TaskService service, TaskStorage storage)
+    public CommandHandler(TaskService service, ITaskStorage storage)
     {
         _service = service;
         _storage = storage;
