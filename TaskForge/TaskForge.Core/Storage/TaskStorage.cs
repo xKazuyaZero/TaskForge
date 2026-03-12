@@ -3,7 +3,7 @@ using TaskForge.Core.Models;
 
 namespace TaskForge.Core.Storage;
 
-public class TaskStorage
+public class TaskStorage : ITaskStorage
 {
     private readonly string _filePath;
 

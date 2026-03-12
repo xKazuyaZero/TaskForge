@@ -4,10 +4,10 @@ using TaskForge.Core.Storage;
 
 var tasksFilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "tasks.json"));
 
-var storage = new TaskStorage(tasksFilePath);
+ITaskStorage storage = new TaskStorage(tasksFilePath);
 var loadedTasks = storage.LoadTasks();
 var service = new TaskService(loadedTasks);
-var handler = new CommandHandler(service, storage);
+var handler = new CommandHandler(service, storage, Console.Out);
 
 Console.WriteLine("TaskForge v0.1");
 Console.WriteLine("Type 'help' for commands.");

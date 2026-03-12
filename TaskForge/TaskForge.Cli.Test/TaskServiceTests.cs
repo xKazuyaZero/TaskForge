@@ -1,8 +1,8 @@
 ﻿using TaskForge.Core.Services;
 
-namespace TaskForge.Core.Test;
+namespace TaskForge.Core.Tests;
 
-public class TaskServiceTest
+public class TaskServiceTests
 {
     [Fact]
     public void Add_FirstTask_GetsIdOne()
