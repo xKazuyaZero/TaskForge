@@ -107,8 +107,9 @@ public class CommandHandlerTests
         public bool SaveResult { get; set; } = true;
         public string SaveErrorMessage { get; set; } = string.Empty;
 
-        public List<TaskItem> LoadTasks()
+        public List<TaskItem> LoadTasks(out string? warningMessage)
         {
+            warningMessage = null;
             return new List<TaskItem>();
         }
 

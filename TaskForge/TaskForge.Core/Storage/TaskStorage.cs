@@ -12,8 +12,10 @@ public class TaskStorage : ITaskStorage
         _filePath = filePath;
     }
 
-    public List<TaskItem> LoadTasks()
+    public List<TaskItem> LoadTasks(out string? warningMessage)
     {
+        warningMessage = null;
+
         if (!File.Exists(_filePath))
             return new List<TaskItem>();
 
@@ -28,12 +30,12 @@ public class TaskStorage : ITaskStorage
         }
         catch (JsonException)
         {
-            Console.WriteLine("Warning: tasks.json is invalid. Starting with an empty task list.");
+            warningMessage = "Warning: tasks.json is invalid. Starting with an empty task list.";
             return new List<TaskItem>();
         }
         catch (IOException)
         {
-            Console.WriteLine("Warning: tasks.json could not be read. Starting with an empty task list.");
+            warningMessage = "Warning: tasks.json could not be read. Starting with an empty task list.";
             return new List<TaskItem>();
         }
     }
