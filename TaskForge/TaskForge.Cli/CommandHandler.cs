@@ -1,4 +1,5 @@
-﻿using TaskForge.Core.Services;
+﻿using System.IO;
+using TaskForge.Core.Services;
 using TaskForge.Core.Storage;
 
 namespace TaskForge.Cli;
@@ -7,11 +8,13 @@ public class CommandHandler
 {
     private readonly TaskService _service;
     private readonly ITaskStorage _storage;
+    private readonly TextWriter _output;
 
-    public CommandHandler(TaskService service, ITaskStorage storage)
+    public CommandHandler(TaskService service, ITaskStorage storage, TextWriter output)
     {
         _service = service;
         _storage = storage;
+        _output = output;
     }
 
     public bool Handle(string input)
@@ -46,19 +49,19 @@ public class CommandHandler
                 return false;
 
             default:
-                Console.WriteLine("Unknown command. Type 'help'.");
+                _output.WriteLine("Unknown command. Type 'help'.");
                 return true;
         }
     }
 
     private void PrintHelp()
     {
-        Console.WriteLine("Commands:");
-        Console.WriteLine(" add <title>     Adds a task");
-        Console.WriteLine(" list            Lists tasks");
-        Console.WriteLine(" done <id>       Marks task done");
-        Console.WriteLine(" delete <id>     Deletes a task");
-        Console.WriteLine(" exit            Quits");
+        _output.WriteLine("Commands:");
+        _output.WriteLine(" add <title>     Adds a task");
+        _output.WriteLine(" list            Lists tasks");
+        _output.WriteLine(" done <id>       Marks task done");
+        _output.WriteLine(" delete <id>     Deletes a task");
+        _output.WriteLine(" exit            Quits");
     }
 
     private void HandleAdd(string arg)
@@ -73,7 +76,7 @@ public class CommandHandler
         }
         catch (ArgumentException ex)
         {
-            Console.WriteLine(ex.Message);
+            _output.WriteLine(ex.Message);
         }
     }
 
@@ -83,14 +86,14 @@ public class CommandHandler
 
         if (tasks.Count == 0)
         {
-            Console.WriteLine("No tasks yet.");
+            _output.WriteLine("No tasks yet.");
             return;
         }
 
         foreach (var t in tasks)
         {
             var mark = t.IsDone ? "x" : " ";
-            Console.WriteLine($"[{mark}] {t.Id}: {t.Title}");
+            _output.WriteLine($"[{mark}] {t.Id}: {t.Title}");
         }
     }
 
@@ -98,7 +101,7 @@ public class CommandHandler
     {
         if (!int.TryParse(arg, out var id))
         {
-            Console.WriteLine("Invalid id. Example: done 1");
+            _output.WriteLine("Invalid id. Example: done 1");
             return;
         }
 
@@ -106,7 +109,7 @@ public class CommandHandler
 
         if (!ok)
         {
-            Console.WriteLine($"Task not found: {id}");
+            _output.WriteLine($"Task not found: {id}");
             return;
         }
 
@@ -120,7 +123,7 @@ public class CommandHandler
     {
         if (!int.TryParse(arg, out var id))
         {
-            Console.WriteLine("Invalid id. Example: delete 1");
+            _output.WriteLine("Invalid id. Example: delete 1");
             return;
         }
 
@@ -128,7 +131,7 @@ public class CommandHandler
 
         if (!ok)
         {
-            Console.WriteLine($"Task not found: {id}");
+            _output.WriteLine($"Task not found: {id}");
             return;
         }
 
@@ -140,11 +143,11 @@ public class CommandHandler
 
     private void PrintSaveResult(bool saveSucceeded, string saveError, string successMessage)
     {
-        Console.WriteLine(successMessage);
+        _output.WriteLine(successMessage);
 
         if (!saveSucceeded)
         {
-            Console.WriteLine($"{saveError} Changes are only in memory and may be lost when the app exits.");
+            _output.WriteLine($"{saveError} Changes are only in memory and may be lost when the app exits.");
         }
     }
 }
