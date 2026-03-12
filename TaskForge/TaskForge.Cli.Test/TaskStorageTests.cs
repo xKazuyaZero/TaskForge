@@ -92,6 +92,27 @@ public class TaskStorageTests : IDisposable
     }
 
     [Fact]
+    public void LoadTasks_ReadFailure_ReturnsEmptyListAndWarning()
+    {
+        // Arrange
+        File.WriteAllText(_testFilePath, "[]");
+        var storage = new TaskStorage(_testFilePath);
+
+        using var stream = new FileStream(
+            _testFilePath,
+            FileMode.Open,
+            FileAccess.ReadWrite,
+            FileShare.None);
+
+        // Act
+        var tasks = storage.LoadTasks(out var warningMessage);
+
+        // Assert
+        Assert.Empty(tasks);
+        Assert.Equal("Warning: tasks.json could not be read. Starting with an empty task list.", warningMessage);
+    }
+
+    [Fact]
     public void TrySaveTasks_ValidFilePath_ReturnsTrue()
     {
         // Arrange
@@ -151,6 +172,7 @@ public class TaskStorageTests : IDisposable
         // Assert
         Assert.True(saveResult);
         Assert.Equal(string.Empty, errorMessage);
+        Assert.Null(warningMessage);
 
         Assert.Equal(originalTasks.Count, loadedTasks.Count);
 
