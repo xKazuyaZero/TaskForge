@@ -5,7 +5,14 @@ using TaskForge.Core.Storage;
 var tasksFilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "tasks.json"));
 
 ITaskStorage storage = new TaskStorage(tasksFilePath);
-var loadedTasks = storage.LoadTasks();
+
+var loadedTasks = storage.LoadTasks(out var loadWarning);
+
+if (!string.IsNullOrWhiteSpace(loadWarning))
+{
+    Console.WriteLine(loadWarning);
+}
+
 var service = new TaskService(loadedTasks);
 var handler = new CommandHandler(service, storage, Console.Out);
 

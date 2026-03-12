@@ -23,10 +23,11 @@ public class TaskStorageTests : IDisposable
         var storage = new TaskStorage(_testFilePath);
 
         // Act
-        var tasks = storage.LoadTasks();
+        var tasks = storage.LoadTasks(out var warningMessage);
 
         // Assert
         Assert.Empty(tasks);
+        Assert.Null(warningMessage);
     }
 
     [Fact]
@@ -37,10 +38,11 @@ public class TaskStorageTests : IDisposable
         var storage = new TaskStorage(_testFilePath);
 
         // Act
-        var tasks = storage.LoadTasks();
+        var tasks = storage.LoadTasks(out var warningMessage);
 
         // Assert
         Assert.Empty(tasks);
+        Assert.Null(warningMessage);
     }
 
     [Fact]
@@ -51,10 +53,11 @@ public class TaskStorageTests : IDisposable
         var storage = new TaskStorage(_testFilePath);
 
         // Act
-        var tasks = storage.LoadTasks();
+        var tasks = storage.LoadTasks(out var warningMessage);
 
         // Assert
         Assert.Empty(tasks);
+        Assert.Equal("Warning: tasks.json is invalid. Starting with an empty task list.", warningMessage);
     }
 
     [Fact]
@@ -73,10 +76,11 @@ public class TaskStorageTests : IDisposable
         var storage = new TaskStorage(_testFilePath);
 
         // Act
-        var tasks = storage.LoadTasks();
+        var tasks = storage.LoadTasks(out var warningMessage);
 
         // Assert
         Assert.Equal(2, tasks.Count);
+        Assert.Null(warningMessage);
 
         Assert.Equal(1, tasks[0].Id);
         Assert.Equal("Buy milk", tasks[0].Title);
@@ -85,6 +89,27 @@ public class TaskStorageTests : IDisposable
         Assert.Equal(2, tasks[1].Id);
         Assert.Equal("Walk dog", tasks[1].Title);
         Assert.True(tasks[1].IsDone);
+    }
+
+    [Fact]
+    public void LoadTasks_ReadFailure_ReturnsEmptyListAndWarning()
+    {
+        // Arrange
+        File.WriteAllText(_testFilePath, "[]");
+        var storage = new TaskStorage(_testFilePath);
+
+        using var stream = new FileStream(
+            _testFilePath,
+            FileMode.Open,
+            FileAccess.ReadWrite,
+            FileShare.None);
+
+        // Act
+        var tasks = storage.LoadTasks(out var warningMessage);
+
+        // Assert
+        Assert.Empty(tasks);
+        Assert.Equal("Warning: tasks.json could not be read. Starting with an empty task list.", warningMessage);
     }
 
     [Fact]
@@ -142,11 +167,12 @@ public class TaskStorageTests : IDisposable
 
         // Act
         var saveResult = storage.TrySaveTasks(originalTasks, out var errorMessage);
-        var loadedTasks = storage.LoadTasks();
+        var loadedTasks = storage.LoadTasks(out var warningMessage);
 
         // Assert
         Assert.True(saveResult);
         Assert.Equal(string.Empty, errorMessage);
+        Assert.Null(warningMessage);
 
         Assert.Equal(originalTasks.Count, loadedTasks.Count);
 

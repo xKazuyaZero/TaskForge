@@ -4,6 +4,6 @@ namespace TaskForge.Core.Storage;
 
 public interface ITaskStorage
 {
-    List<TaskItem> LoadTasks();
+    List<TaskItem> LoadTasks(out string? warningMessage);
     bool TrySaveTasks(IReadOnlyList<TaskItem> tasks, out string errorMessage);
 }
