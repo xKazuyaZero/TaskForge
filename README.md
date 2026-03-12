@@ -4,6 +4,36 @@
 
 TaskForge is a C# command-line task manager built as a portfolio project to practice real software engineering fundamentals, not just syntax. It supports creating, listing, completing, and deleting tasks, persists data to JSON, and includes automated tests plus GitHub Actions CI.
 
+## Quick Start
+
+### Prerequisites
+
+- .NET 10 SDK
+
+### Restore dependencies
+
+```bash
+dotnet restore TaskForge/TaskForge.slnx
+```
+
+### Build the solution
+
+```bash
+dotnet build TaskForge/TaskForge.slnx --configuration Release
+```
+
+### Run the CLI app
+
+```bash
+dotnet run --project TaskForge/TaskForge.Cli
+```
+
+### Run all tests
+
+```bash
+dotnet test TaskForge/TaskForge.slnx --configuration Release
+```
+
 ## Project Overview
 
 TaskForge started as a simple CLI app and was improved through multiple refactoring sprints. The goal was not only to make the application work, but to make the codebase cleaner, safer, easier to test, and easier to maintain over time.
@@ -25,10 +55,70 @@ This project focuses on:
 - Delete tasks
 - Persist tasks to `tasks.json`
 - Handle invalid input without crashing
-- Recover cleanly from missing, empty, or invalid JSON
+- Recover cleanly from missing, empty, invalid, or unreadable JSON
 - Handle save failures without crashing the app
 - Run automated tests for service, storage, and command behavior
 - Validate builds and tests automatically in CI
+
+## Commands
+
+TaskForge supports the following commands:
+
+| Command | Description |
+|---|---|
+| `help` | Shows available commands |
+| `add <title>` | Adds a new task |
+| `list` | Lists all tasks |
+| `done <id>` | Marks a task as completed |
+| `delete <id>` | Deletes a task |
+| `exit` | Exits the application |
+
+### Example Session
+
+```text
+> add Buy milk
+Added: [ ] 1: Buy milk
+
+> add Walk dog
+Added: [ ] 2: Walk dog
+
+> list
+[ ] 1: Buy milk
+[ ] 2: Walk dog
+
+> done 1
+Marked done: 1
+
+> delete 2
+Deleted task: 2
+
+> list
+[x] 1: Buy milk
+```
+
+## Persistence
+
+Task data is stored in a JSON file so tasks survive between runs.
+
+### Where `tasks.json` is stored
+
+`tasks.json` is created in the CLI project folder, next to `Program.cs`.
+
+Expected location:
+
+```text
+TaskForge/TaskForge.Cli/tasks.json
+```
+
+### Persistence behavior
+
+- loads existing tasks at startup
+- continues safely when the file does not exist
+- returns an empty list when the file is empty
+- handles invalid or unreadable JSON without crashing
+- returns warnings from the storage layer instead of writing directly to the console
+- saves changes after successful add, complete, and delete operations
+- reports save failures cleanly instead of crashing
 
 ## Solution Structure
 
@@ -97,83 +187,7 @@ Responsible for:
 
 This separation keeps the project easier to test and easier to evolve.
 
-## Commands
-
-TaskForge supports the following commands:
-
-| Command | Description |
-|---|---|
-| `help` | Shows available commands |
-| `add <title>` | Adds a new task |
-| `list` | Lists all tasks |
-| `done <id>` | Marks a task as completed |
-| `delete <id>` | Deletes a task |
-| `exit` | Exits the application |
-
-### Example Session
-
-```text
-> add Buy milk
-Added: [ ] 1: Buy milk
-
-> add Walk dog
-Added: [ ] 2: Walk dog
-
-> list
-[ ] 1: Buy milk
-[ ] 2: Walk dog
-
-> done 1
-Marked done: 1
-
-> delete 2
-Deleted task: 2
-
-> list
-[x] 1: Buy milk
-```
-
-## Persistence
-
-Task data is stored in a JSON file so tasks survive between runs.
-
-Persistence behavior includes:
-
-- loading existing tasks at startup
-- continuing safely when the file does not exist
-- returning an empty list when the file is empty
-- handling invalid JSON without crashing
-- returning warnings instead of printing directly from the storage layer
-- saving changes after successful add, complete, and delete operations
-- reporting save failures cleanly instead of crashing
-
-This design keeps storage concerns separate from CLI output concerns.
-
-## Running the Project
-
-### Prerequisites
-
-- .NET 10 SDK
-
-### Restore dependencies
-
-```bash
-dotnet restore TaskForge/TaskForge.slnx
-```
-
-### Build the solution
-
-```bash
-dotnet build TaskForge/TaskForge.slnx --configuration Release
-```
-
-### Run the CLI app
-
-```bash
-dotnet run --project TaskForge/TaskForge.Cli
-```
-
-## Running Tests
+## Testing
 
 Run the full test suite with:
 
@@ -204,7 +218,7 @@ The workflow runs on:
 - `push`
 - `pull_request`
 
-## Why This Project Matters
+## Engineering Focus
 
 TaskForge is more than a beginner CRUD app. It was built as a progression project to practice the kinds of improvements that make software more professional over time.
 
